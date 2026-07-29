@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jordan Ellis</title>
+
+<style>
+  /* ============================================================
+     CUSTOMIZE ME: change these and the whole page updates.
+     ============================================================ */
+  :root {
+    --color-bg: #008080;      /* Windows 95 teal desktop background */
+    --color-ink: #1E2A24;     /* text color + icon button background */
+    --color-accent: #4B6B58;  /* icon button hover color */
+    --color-muted: #6E7A73;   /* secondary text */
+
+    --font-body: 'Helvetica Neue', Arial, sans-serif;
+    --max-width: 480px;
+    --icon-size: 46px;        /* size of each icon button */
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden; /* keep the draggable windows from creating scrollbars */
+    padding-bottom: 36px; /* leave room above the taskbar */
+  }
+
+  .wrap {
+    max-width: var(--max-width);
+    padding: 2rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  p.intro {
+    color: var(--color-muted);
+    margin: 0 0 2rem;
+    font-size: 1.05rem;
+  }
+
+  /* ============================================================
+     Draggable window — Windows 95 style chrome
+     ============================================================ */
+  #links-window,
+  #about-window,
+  #message-window,
+  #welcome-window {
+    position: fixed;
+    background: #C0C0C0;
+    border-radius: 0;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #dfdfdf,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #ffffff;
+    padding: 3px;
+    user-select: none;
+    width: max-content;
+  }
+
+  #links-window {
+    top: 68%;
+    left: 62%;
+    transform: translate(-50%, -50%);
+  }
+
+  #about-window {
+    top: 32%;
+    left: 38%;
+    transform: translate(-50%, -50%);
+  }
+
+    #welcome-window {
+        top: 12%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+    }
+
+  .window-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 3px 3px 3px 6px;
+    background: linear-gradient(90deg, #000080, #1084d0);
+    cursor: grab;
+  }
+
+  .window-titlebar:active {
+    cursor: grabbing;
+  }
+
+  .window-titlebar .title {
+    flex: 1;
+    color: #ffffff;
+    font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .titlebar-buttons {
+    display: flex;
+    gap: 2px;
+  }
+
+  .titlebar-buttons button {
+    width: 16px;
+    height: 14px;
+    background: #C0C0C0;
+    border: none;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #ffffff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
+    font-family: Tahoma, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000000;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  }
+
+  .titlebar-buttons button:active {
+    box-shadow:
+      inset 1px 1px 0 #0a0a0a,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  .window-body {
+    padding: 0.9rem;
+    font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+  }
+
+  #about-window .window-body {
+    max-width: 280px;
+    font-size: 0.85rem;
+    color: #000000;
+    background: #ffffff;
+    margin: 3px;
+    padding: 0.9rem;
+    box-shadow:
+      inset 1px 1px 0 #808080,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  #about-window .window-body p {
+    margin: 0;
+  }
+
+    #welcome-window .window-body {
+        max-width: 280px;
+        font-size: 0.85rem;
+        color: #000;
+        background: #ffffff;
+        margin: 3px;
+        padding: 0.9rem;
+        box-shadow:
+        inset 1px 1px 0 #808080,
+        inset -1px -1px 0 #ffffff;
+    }
+
+    #welcome-window .window-body p {
+        margin: 0;
+    }
+
+  /* ---------- Message window (send-to-Discord form) ---------- */
+  #message-window {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #message-window .window-body {
+    background: #ffffff;
+    margin: 3px;
+    padding: 0.9rem;
+    width: 260px;
+    box-shadow:
+      inset 1px 1px 0 #808080,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  .msg-field {
+    display: block;
+    font-size: 0.78rem;
+    margin-bottom: 3px;
+    color: #000000;
+  }
+
+  .msg-input,
+  .msg-textarea {
+    width: 100%;
+    font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+    font-size: 0.8rem;
+    padding: 4px 5px;
+    margin-bottom: 0.7rem;
+    border: none;
+    background: #ffffff;
+    box-shadow:
+      inset -1px -1px 0 #ffffff,
+      inset 1px 1px 0 #808080,
+      inset -2px -2px 0 #dfdfdf,
+      inset 2px 2px 0 #0a0a0a;
+  }
+
+  .msg-textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .msg-send {
+    display: block;
+    margin-left: auto;
+    padding: 4px 14px;
+    font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+    font-size: 0.8rem;
+    background: #C0C0C0;
+    border: none;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #ffffff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
+    cursor: default;
+  }
+
+  .msg-send:active {
+    box-shadow:
+      inset 1px 1px 0 #0a0a0a,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  .msg-status {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    min-height: 1em;
+  }
+
+  /* Windows start closed; JS toggles this via inline display */
+  #links-window,
+  #about-window,
+  #message-window {
+    display: none;
+  }
+
+  /* ============================================================
+     Taskbar — Windows 95 style
+     ============================================================ */
+  .taskbar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 36px;
+    background: #C0C0C0;
+    box-shadow: inset 0 1px 0 #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 4px;
+    font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+    z-index: 10;
+  }
+
+  .taskbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    background: #C0C0C0;
+    border: none;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #ffffff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
+    font-family: inherit;
+    font-size: 0.78rem;
+    color: #000000;
+    cursor: default;
+  }
+
+  .taskbar-btn.start {
+    font-weight: 700;
+  }
+
+  .taskbar-apps .taskbar-btn {
+    width: 32px;
+    padding: 0;
+  }
+
+  .taskbar-apps .taskbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .taskbar-btn.open {
+    box-shadow:
+      inset 1px 1px 0 #0a0a0a,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  .taskbar-divider {
+    width: 2px;
+    height: 26px;
+    box-shadow: inset -1px 0 0 #0a0a0a, inset 1px 0 0 #808080;
+  }
+
+  .taskbar-apps {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .taskbar-clock {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-shadow:
+      inset 1px 1px 0 #808080,
+      inset -1px -1px 0 #ffffff;
+    font-size: 0.78rem;
+  }
+
+  /* ---------- Icon links ---------- */
+  ul.links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  ul.links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    border-radius: 10px;
+    background: var(--color-ink);
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  ul.links a:hover,
+  ul.links a:focus-visible {
+    background: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  ul.links svg {
+    width: 22px;
+    height: 22px;
+    fill: #FFFFFF; /* plain white icons */
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Change your name here -->
+  <h1>Jordan Ellis</h1>
+
+</div>
+
+<div id="welcome-window">
+  <div class="window-titlebar" data-drag-handle>
+    <span class="title">welcome</span>
+    <div class="titlebar-buttons">
+      <button aria-hidden="true">_</button>
+      <button aria-hidden="true">□</button>
+      <button aria-hidden="true">✕</button>
+    </div>
+  </div>
+
+  <div class="window-body">
+    <p>
+      Click the icons below to learn more about me, browse my links, or send me a message.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================
+     Draggable window: About Me.
+     Edit the paragraph text below to change your bio.
+     ============================================================ -->
+<div id="about-window">
+  <div class="window-titlebar" data-drag-handle>
+    <span class="title">about me</span>
+    <div class="titlebar-buttons">
+      <button aria-hidden="true">_</button>
+      <button aria-hidden="true">□</button>
+      <button aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <div class="window-body">
+    <p>
+      Product designer based in Minneapolis. I design and build small,
+      useful tools — mostly for people who work with their hands.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================
+     Draggable window containing the icon links.
+     Drag it by its title bar. Starting position is set by the
+     #links-window "top" / "left" values in the CSS above.
+     ============================================================ -->
+<div id="links-window">
+  <div class="window-titlebar" data-drag-handle>
+    <span class="title">links</span>
+    <div class="titlebar-buttons">
+      <button aria-hidden="true">_</button>
+      <button aria-hidden="true">□</button>
+      <button aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <div class="window-body">
+    <ul class="links">
+
+      <!-- YouTube -->
+      <li>
+        <a href="https://youtube.com/@NOCTULLA1" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
+          </svg>
+        </a>
+      </li>
+
+      <!-- Roblox (2020-era mark: tilted square with cut-out center) -->
+      <li>
+        <a href="https://roblox.com/users/253989649/profile" aria-label="Roblox" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .8 23.2 12 12 23.2.8 12 12 .8Zm0 6.8-4.4 4.4 4.4 4.4 4.4-4.4L12 7.6Z"/>
+          </svg>
+        </a>
+      </li>
+
+      <!-- Discord -->
+      <li>
+        <a href="https://discord.com/628742059951521799" aria-label="Discord" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.37-.44.87-.61 1.25a18.3 18.3 0 0 0-5.48 0c-.17-.39-.4-.88-.62-1.25a.08.08 0 0 0-.08-.04c-1.7.29-3.32.8-4.89 1.52a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06c2.05 1.5 4.04 2.42 5.99 3.03a.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 0 0-.04-.11c-.66-.25-1.28-.55-1.87-.9a.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01c.12.1.24.2.37.3a.08.08 0 0 1-.01.12c-.6.35-1.21.65-1.87.9a.08.08 0 0 0-.04.11c.36.69.77 1.36 1.22 1.99a.08.08 0 0 0 .09.03c1.96-.61 3.95-1.52 6-3.03a.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/>
+          </svg>
+        </a>
+      </li>
+
+      <!-- TikTok -->
+      <li>
+        <a href="https://tiktok.com/@noctulla_" aria-label="TikTok" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.6 0h-3.3v15.5a3.5 3.5 0 1 1-2.5-3.4V8.7a6.9 6.9 0 1 0 5.8 6.8V8.1a8.3 8.3 0 0 0 4.9 1.6V6.4c-2.6 0-4.9-2-4.9-6.4Z"/>
+          </svg>
+        </a>
+      </li>
+
+      <!-- Twitch -->
+      <li>
+        <a href="https://www.twitch.tv/noctulla" aria-label="Twitch" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.3 0 1.1 3.2v17.6h6v3.2h3.2l3.2-3.2h4.8L23.9 15V0H4.3Zm17.5 14L18.7 17h-4.8l-3.2 3.2V17H5.2V2.1h16.6V14Z"/>
+            <path d="M17.6 5.4h2.1v6.4h-2.1zm-5.8 0h2.2v6.4h-2.2z"/>
+          </svg>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================
+     Draggable window: send a message that arrives in your DMs.
+
+     SETUP REQUIRED — read before this will work:
+     Sending a DM (rather than posting to a channel) requires a
+     Discord bot, and a bot's token must never live in this file
+     or any client-side code — anyone visiting the page could
+     view source and steal it, giving them full control of your
+     bot. So this form talks to a small backend you deploy
+     yourself, which holds the token safely and relays the
+     message as a DM to your Discord ID.
+
+     1. Deploy the included discord-dm-worker.js as a Cloudflare
+        Worker (free tier). Instructions are in that file.
+     2. Paste the Worker's URL into BACKEND_URL below, in place
+        of "PASTE YOUR BACKEND URL HERE".
+     ============================================================ -->
+<div id="message-window">
+  <div class="window-titlebar" data-drag-handle>
+    <span class="title">send a message</span>
+    <div class="titlebar-buttons">
+      <button aria-hidden="true">_</button>
+      <button aria-hidden="true">□</button>
+      <button aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <div class="window-body">
+    <form id="message-form">
+      <label class="msg-field" for="msg-name">Name</label>
+      <input class="msg-input" type="text" id="msg-name" maxlength="60" required>
+
+      <label class="msg-field" for="msg-body">Message</label>
+      <textarea class="msg-textarea" id="msg-body" maxlength="1000" required></textarea>
+
+      <button class="msg-send" type="submit">Send</button>
+      <div class="msg-status" id="msg-status"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Replace this with your actual Cloudflare Worker URL
+const BACKEND_URL = 'https://portfolio-backend.YOUR_USERNAME.workers.dev';
+
+(function () {
+  const form = document.getElementById('message-form');
+  const status = document.getElementById('msg-status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('msg-name').value.trim();
+    const body = document.getElementById('msg-body').value.trim();
+
+    if (!name || !body) return;
+
+    status.textContent = 'Sending...';
+
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // We only send the raw data; the Worker formats it for Discord
+        body: JSON.stringify({
+          name: name,
+          message: body
+        })
+      });
+
+      if (res.ok) {
+        status.textContent = 'Sent!';
+        form.reset();
+      } else {
+        const text = await res.text();
+        console.log(res.status, text);
+        status.textContent = `Error ${res.status}`;
+      }
+    } catch (err) {
+      status.textContent = 'Network error.';
+      console.error(err);
+    }
+  });
+})();
+</script>
+
+<!-- ============================================================
+     Taskbar. Each button toggles the matching window via
+     data-target, which must match a window's id.
+     ============================================================ -->
+<div class="taskbar">
+  <button class="taskbar-btn start" aria-hidden="true">Start</button>
+  <div class="taskbar-divider"></div>
+  <div class="taskbar-apps">
+    <button class="taskbar-btn" data-target="about-window" aria-label="About me" title="About me">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="14" height="14" fill="#ffffff" stroke="#000000"/>
+        <circle cx="8" cy="6" r="2.4" fill="#000000"/>
+        <path d="M3.2 13c.4-2.6 2.3-4 4.8-4s4.4 1.4 4.8 4Z" fill="#000000"/>
+      </svg>
+    </button>
+    <button class="taskbar-btn" data-target="links-window" aria-label="Links" title="Links">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="6.5" width="7" height="3" fill="#000080" stroke="#000000"/>
+        <rect x="8" y="6.5" width="7" height="3" fill="#1084d0" stroke="#000000"/>
+        <rect x="6.5" y="5.5" width="3" height="5" fill="#c0c0c0" stroke="#000000"/>
+      </svg>
+    </button>
+    <button class="taskbar-btn" data-target="message-window" aria-label="Send a message" title="Send a message">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="3" width="14" height="10" fill="#ffffff" stroke="#000000"/>
+        <path d="M1 3.5 8 9l7-5.5" fill="none" stroke="#000000" stroke-width="1"/>
+      </svg>
+    </button>
+  </div>
+  <div class="taskbar-clock" id="taskbar-clock">12:00 PM</div>
+</div>
+
+<script>
+  // ============================================================
+  // Drag behavior for windows.
+  // Drag by each window's title bar; position is clamped to
+  // stay on screen. Works for any number of ".window" elements.
+  // ============================================================
+  (function () {
+
+    let highestZ = 100;
+    
+    document.querySelectorAll('#about-window, #links-window, #message-window, #welcome-window').forEach(makeDraggable);
+
+    function makeDraggable(win) {
+      const bar = win.querySelector('[data-drag-handle]');
+      let dragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      win.addEventListener('mousedown', () => {
+        win.style.zIndex = ++highestZ;
+      });
+
+      win.addEventListener('touchstart', () => {
+        win.style.zIndex = ++highestZ;
+      }, { passive: true });
+
+      function startDrag(clientX, clientY) {
+        const rect = win.getBoundingClientRect();
+        win.style.zIndex = ++highestZ;
+        dragging = true;
+        offsetX = clientX - rect.left;
+        offsetY = clientY - rect.top;
+        // Switch from centered transform to absolute top/left so dragging is direct.
+        win.style.left = rect.left + 'px';
+        win.style.top = rect.top + 'px';
+        win.style.transform = 'none';
+      }
+
+      function moveDrag(clientX, clientY) {
+        if (!dragging) return;
+        const maxX = window.innerWidth - win.offsetWidth;
+        const maxY = window.innerHeight - win.offsetHeight;
+        const x = Math.min(Math.max(0, clientX - offsetX), maxX);
+        const y = Math.min(Math.max(0, clientY - offsetY), maxY);
+        win.style.left = x + 'px';
+        win.style.top = y + 'px';
+      }
+
+      function endDrag() {
+        dragging = false;
+      }
+
+      // Mouse
+      bar.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+      window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+      window.addEventListener('mouseup', endDrag);
+
+      // Touch
+      bar.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        startDrag(t.clientX, t.clientY);
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        const t = e.touches[0];
+        moveDrag(t.clientX, t.clientY);
+      }, { passive: true });
+      window.addEventListener('touchend', endDrag);
+    }
+  })();
+
+  // ============================================================
+  // Taskbar: open/close windows.
+  // Windows start closed. State is tracked explicitly in JS
+  // (rather than inferred from inline styles) so every click
+  // behaves consistently.
+  // ============================================================
+    (function () {
+
+    const taskbarButtons =
+        document.querySelectorAll('.taskbar-btn[data-target]');
+
+    const welcome = document.getElementById('welcome-window');
+
+    taskbarButtons.forEach((btn) => {
+      const win = document.getElementById(btn.dataset.target);
+      if (!win) return;
+
+      let isOpen = false; // explicit state, not inferred from the DOM
+
+      function setOpen(open) {
+        isOpen = open;
+        win.style.display = open ? 'block' : 'none';
+        btn.classList.toggle('open', open);
+      }
+
+      setOpen(false); // enforce closed starting state
+
+      btn.addEventListener('click', () => {
+        setOpen(!isOpen);
+        });
+
+      // Wire up this window's title-bar ✕ button to close it.
+      const closeBtn = win.querySelector('.titlebar-buttons button:last-child');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => setOpen(false));
+      }
+    });
+  })();
+
+  // ============================================================
+  // Taskbar clock. Updates every second; swap the options below
+  // for a different time format.
+  // ============================================================
+  (function () {
+    const clock = document.getElementById('taskbar-clock');
+    if (!clock) return;
+
+    function tick() {
+      clock.textContent = new Date().toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+      });
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
+</body>
+</html>
