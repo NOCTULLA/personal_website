@@ -61,8 +61,10 @@
      ============================================================ */
   #links-window,
   #about-window,
+  #qna-window,
   #message-window,
-  #welcome-window {
+  #welcome-window,
+  #minesweeper-window {
     position: fixed;
     background: #C0C0C0;
     border-radius: 0;
@@ -83,6 +85,12 @@
   }
 
   #about-window {
+    top: 32%;
+    left: 38%;
+    transform: translate(-50%, -50%);
+  }
+
+  #qna-window {
     top: 32%;
     left: 38%;
     transform: translate(-50%, -50%);
@@ -323,6 +331,22 @@
     margin: 0;
   }
 
+  #qna-window .window-body {
+    max-width: 280px;
+    font-size: 0.85rem;
+    color: #000000;
+    background: #ffffff;
+    margin: 3px;
+    padding: 0.9rem;
+    box-shadow:
+      inset 1px 1px 0 #808080,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  #qna-window .window-body p {
+    margin: 0;
+  }
+
   #welcome-window .window-body {
       max-width: 280px;
       font-size: 0.85rem;
@@ -363,6 +387,14 @@
     color: #000000;
   }
 
+  .msg-disclamer {
+    display: block;
+    font-size: 0.60rem;
+    margin-bottom: 1px;
+    color: #000000;
+    font-style: italic;
+  }
+
   .msg-input,
   .msg-textarea {
     width: 100%;
@@ -387,7 +419,7 @@
   .msg-send {
     display: block;
     margin-left: auto;
-    padding: 4px 14px;
+    padding: 4px 16px;
     font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
     font-size: 0.8rem;
     background: #C0C0C0;
@@ -413,7 +445,13 @@
     min-height: 1em;
   }
 
+  .msg-status:not(:empty) {
+    margin-top: 0.6rem;
+    min-height: 1em;
+  }
+
   #minesweeper-window {
+    position: fixed; /* <--- ADD THIS LINE */
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -539,8 +577,10 @@
   /* Windows start closed; JS toggles this via inline display */
   #links-window,
   #about-window,
+  #qna-window,
   #message-window,
-  #draw-window {
+  #draw-window,
+  #minesweeper-window {
     display: none;
   }
 
@@ -696,7 +736,7 @@
 
   <div class="window-body">
     <p>
-      Click the icons below to learn more about me, browse my links, or send me a message.
+      Click the icons below to learn more about me, browse my links, send me a message, or play a quick game of Minesweeper! You can also drag the windows around.
     </p>
   </div>
 </div>
@@ -711,8 +751,54 @@
   </div>
   <div class="window-body">
     <p>
-      Hello! My name is NOCTULLA and I am a content creator and game developer! Feel free to contact me via the mail below.
+      Hello,
     </p>
+    <p>
+       My name is NOCTULLA and I am a content creator and (hopefully soon) game developer! Feel free to contact me via the mail below.
+    </p>
+  </div>
+</div>
+
+<div id="qna-window">
+  <div class="window-titlebar" data-drag-handle>
+    <span class="title">Q&A</span>
+    <div class="titlebar-buttons">
+      <button aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <div class="window-body">
+    <details>
+      <summary><strong>How did you make this website?</strong></summary>
+      <p>Sadily, this website was made using AI. I only used it to learn because I have never touched HTML, so this website was 50/50 coded by me. I plan on coding a better version that had no AI help though.</p>
+    </details>
+    <details>
+      <summary><strong>When is your birthday?</strong></summary>
+      <p>My birthday is February 19th! Sixteen years old as of 2026.</p>
+    </details>
+    <details>
+      <summary><strong>What is your favorite game?</strong></summary>
+      <p>My favorite game is Celeste! Other games I like are Geometry Dash, Shapez 2, Balatro, and It Takes Two. Some Roblox games are Phighting, Forsaken, SEWH, Obby Creator, and Nullscape!</p>
+    </details>
+    <details>
+      <summary><strong>Will you ever do "___"?</strong></summary>
+      <p>Depends if it costs money or if it's something I'm intrested in.</p>
+    </details>
+    <details>
+      <summary><strong>How can I get in touch with you?</strong></summary>
+      <p>Either contact me via the "Message" feature on this website, or try sending a DM via discord. Username is "noctulla".</p>
+    </details>
+    <details>
+      <summary><strong>How did you get into streaming/content creation?</strong></summary>
+      <p>I don't remember, but my best guess was wanting to be famous or wanting to show people the dumb things I was doing 5 years ago.</p>
+    </details>
+    <details>
+      <summary><strong>What are you intrested in?</strong></summary>
+      <p>Of course coding, but also Object Shows, Graphic Design, and more! Don't feel afraid to ask.</p>
+    </details>
+    <details>
+      <summary><strong>Click me for a Secret!</strong></summary>
+      <p>You lost the game.</p>
+    </details>
   </div>
 </div>
 
@@ -780,7 +866,7 @@
 
 <div id="message-window">
   <div class="window-titlebar" data-drag-handle>
-    <span class="title">Message</span>
+    <span class="title">NOCTULLA Mail</span>
     <div class="titlebar-buttons">
 
       <button aria-label="Close window">✕</button>
@@ -796,13 +882,14 @@
 
       <button class="msg-send" type="submit">Send</button>
       <div class="msg-status" id="msg-status"></div>
+
     </form>
   </div>
 </div>
 
 <div id="draw-window">
   <div class="window-titlebar" data-drag-handle>
-    <span class="title">NOCPaint</span>
+    <span class="title">NPaint</span>
     <div class="titlebar-buttons">
 
       <button aria-label="Close window">✕</button>
@@ -854,7 +941,7 @@
 </div>
 
 <div id="minesweeper-window" class="window">
-  <div class="window-titlebar" data-drag-handle>/
+  <div class="window-titlebar" data-drag-handle>
     <span class="title">Minesweeper</span>
     <div class="titlebar-buttons">
       <button aria-label="Close window">✕</button>
@@ -881,6 +968,13 @@
         <rect x="1" y="1" width="14" height="14" fill="#ffffff" stroke="#000000"/>
         <circle cx="8" cy="6" r="2.4" fill="#000000"/>
         <path d="M3.2 13c.4-2.6 2.3-4 4.8-4s4.4 1.4 4.8 4Z" fill="#000000"/>
+      </svg>
+    </button>
+    <button class="taskbar-btn" data-target="qna-window" aria-label="Q&A" title="Q&A">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        <path d="M12 8v4"></path>
+        <path d="M12 16h.01"></path>
       </svg>
     </button>
     <button class="taskbar-btn" data-target="links-window" aria-label="Links" title="Links">
@@ -1296,8 +1390,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Drag behavior for windows.
   // ============================================================
   let highestZ = 100;
-  
-  document.querySelectorAll('#about-window, #links-window, #message-window, #welcome-window, #draw-window, #minesweeper-window').forEach(makeDraggable);
+
+  document.querySelectorAll('#about-window, #qna-window, #links-window, #message-window, #welcome-window, #draw-window, #minesweeper-window').forEach(makeDraggable);
 
   function makeDraggable(win) {
     const bar = win.querySelector('[data-drag-handle]');
@@ -1307,31 +1401,46 @@ document.addEventListener('DOMContentLoaded', () => {
     let offsetX = 0;
     let offsetY = 0;
 
-    win.addEventListener('mousedown', () => {
+    // Bring window to front whenever clicked or touched anywhere inside it
+    function bringToFront() {
       win.style.zIndex = ++highestZ;
-    });
+    }
 
-    win.addEventListener('touchstart', () => {
-      win.style.zIndex = ++highestZ;
-    }, { passive: true });
+    win.addEventListener('mousedown', bringToFront);
+    win.addEventListener('touchstart', bringToFront, { passive: true });
 
-    function startDrag(clientX, clientY) {
-      const rect = win.getBoundingClientRect();
-      win.style.zIndex = ++highestZ;
+    function startDrag(e, clientX, clientY) {
+      // Don't drag if clicking a button inside the titlebar (e.g. close '✕')
+      if (e.target.closest('button')) return;
+
+      // Prevent text highlighting on desktop while dragging
+      if (e.type === 'mousedown') {
+        e.preventDefault();
+      }
+
       dragging = true;
+
+      const rect = win.getBoundingClientRect();
       offsetX = clientX - rect.left;
       offsetY = clientY - rect.top;
+
+      // Lock position to current pixel coordinates and clear transforms
       win.style.left = rect.left + 'px';
       win.style.top = rect.top + 'px';
       win.style.transform = 'none';
     }
 
-    function moveDrag(clientX, clientY) {
+    function moveDrag(e, clientX, clientY) {
       if (!dragging) return;
+
+      // Prevent page scrolling on mobile touch dragging
+      if (e.cancelable) e.preventDefault();
+
       const maxX = window.innerWidth - win.offsetWidth;
       const maxY = window.innerHeight - win.offsetHeight;
       const x = Math.min(Math.max(0, clientX - offsetX), maxX);
       const y = Math.min(Math.max(0, clientY - offsetY), maxY);
+
       win.style.left = x + 'px';
       win.style.top = y + 'px';
     }
@@ -1340,18 +1449,22 @@ document.addEventListener('DOMContentLoaded', () => {
       dragging = false;
     }
 
-    bar.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
-    window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+    // Mouse event listeners
+    bar.addEventListener('mousedown', (e) => startDrag(e, e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => moveDrag(e, e.clientX, e.clientY));
     window.addEventListener('mouseup', endDrag);
 
+    // Touch event listeners (passive: false allows e.preventDefault to stop page scrolling)
     bar.addEventListener('touchstart', (e) => {
       const t = e.touches[0];
-      startDrag(t.clientX, t.clientY);
-    }, { passive: true });
+      startDrag(e, t.clientX, t.clientY);
+    }, { passive: false });
+
     window.addEventListener('touchmove', (e) => {
       const t = e.touches[0];
-      moveDrag(t.clientX, t.clientY);
-    }, { passive: true });
+      moveDrag(e, t.clientX, t.clientY);
+    }, { passive: false });
+
     window.addEventListener('touchend', endDrag);
   }
 
@@ -1385,7 +1498,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.titlebar-buttons button').forEach((closeBtn) => {
     closeBtn.addEventListener('click', () => {
       // Find the window parent of this button
-      const win = closeBtn.closest('#welcome-window, #about-window, #links-window, #message-window, #draw-window, #minesweeper-window');
+      const win = closeBtn.closest('#welcome-window, #about-window, #qna-window, #links-window, #message-window, #draw-window, #minesweeper-window');
       
       if (win) {
         win.style.display = 'none';
