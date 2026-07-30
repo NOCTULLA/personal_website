@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jordan Ellis</title>
+<title>NOCTULLA</title>
 
 <style>
   /* ============================================================
@@ -88,12 +88,164 @@
     transform: translate(-50%, -50%);
   }
 
-    #welcome-window {
-        top: 12%;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-    }
+  #welcome-window {
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+  }
+
+  #draw-window {
+    top: 45%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    background: #C0C0C0;
+    border-radius: 0;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #dfdfdf,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #ffffff;
+    padding: 3px;
+    user-select: none;
+    width: max-content;
+  }
+
+  #draw-window .window-body {
+    background: #ffffff;
+    margin: 3px;
+    padding: 0.9rem;
+    width: 260px;
+    box-shadow:
+      inset 1px 1px 0 #808080,
+      inset -1px -1px 0 #ffffff;
+  }
+
+  .msg-canvas {
+    width: 100%;
+    height: 120px;
+    background: #ffffff;
+    cursor: crosshair;
+    margin-bottom: 0.2rem;
+    box-shadow:
+      inset 1px 1px 0 #0a0a0a,
+      inset -1px -1px 0 #dfdfdf,
+      inset 2px 2px 0 #808080,
+      inset -2px -2px 0 #ffffff;
+  }
+
+  .canvas-tools {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.7rem;
+  }
+
+  .color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 0px;
+  padding: 4px;
+  background: #c0c0c0;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.color-swatch {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.color-swatch:hover {
+  outline: 1px solid #000;
+}
+
+.color-swatch.active {
+  border-top: 2px solid #000000;
+  border-left: 2px solid #000000;
+  border-right: 2px solid #dfdfdf;
+  border-bottom: 2px solid #dfdfdf;
+  outline: 1px solid #ffffff;
+}
+
+.brush-sizes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%; /* Forces brushes to take up the entire top row */
+  margin-bottom: 0px; /* Adds a clean gap between brushes and the color swatches below */
+}
+
+.brush-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  cursor: pointer;
+}
+
+.brush-btn:active,
+.brush-btn.active {
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  background: #dfdfdf;
+}
+
+.dot {
+  background-color: #000000;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-small {
+  width: 3px;
+  height: 3px;
+}
+
+.dot-medium {
+  width: 6px;
+  height: 6px;
+}
+
+.dot-large {
+  width: 10px;
+  height: 10px;
+}
+
+  .btn-clear {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: #C0C0C0;
+    border: none;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #ffffff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
+  }
+  
+  .btn-clear:active {
+    box-shadow: inset 1px 1px 0 #0a0a0a, inset -1px -1px 0 #ffffff;
+  }
 
   .window-titlebar {
     display: flex;
@@ -171,21 +323,21 @@
     margin: 0;
   }
 
-    #welcome-window .window-body {
-        max-width: 280px;
-        font-size: 0.85rem;
-        color: #000;
-        background: #ffffff;
-        margin: 3px;
-        padding: 0.9rem;
-        box-shadow:
-        inset 1px 1px 0 #808080,
-        inset -1px -1px 0 #ffffff;
-    }
+  #welcome-window .window-body {
+      max-width: 280px;
+      font-size: 0.85rem;
+      color: #000;
+      background: #ffffff;
+      margin: 3px;
+      padding: 0.9rem;
+      box-shadow:
+      inset 1px 1px 0 #808080,
+      inset -1px -1px 0 #ffffff;
+  }
 
-    #welcome-window .window-body p {
-        margin: 0;
-    }
+  #welcome-window .window-body p {
+      margin: 0;
+  }
 
   /* ---------- Message window (send-to-Discord form) ---------- */
   #message-window {
@@ -261,10 +413,134 @@
     min-height: 1em;
   }
 
+  #minesweeper-window {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+  }
+
+  #minesweeper-window .window-body {
+    padding: 6px;
+    background: #c0c0c0;
+  }
+
+  .minesweeper-container {
+    background: #c0c0c0;
+    padding: 6px;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #808080;
+    border-bottom: 2px solid #808080;
+  }
+
+  .ms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+    margin-bottom: 6px;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    background: #c0c0c0;
+  }
+
+  .ms-counter {
+    background: #000000;
+    color: #ff0000;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 1px 3px;
+    border-top: 1px solid #808080;
+    border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    letter-spacing: 1px;
+  }
+
+  .ms-face-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    background: #c0c0c0;
+    border: none;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #ffffff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
+    cursor: pointer;
+  }
+
+  .ms-face-btn:active {
+    box-shadow: inset 1px 1px 0 #0a0a0a, inset -1px -1px 0 #ffffff;
+  }
+
+  .ms-board {
+    display: grid;
+    grid-template-columns: repeat(9, 20px);
+    grid-template-rows: repeat(9, 20px);
+    gap: 0;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+  }
+
+  .ms-cell {
+    width: 20px;
+    height: 20px;
+    background-image: url('Tile_Map_Classic.png');
+    /* 512x128 sprite sheet scaled down to match 20px tiles (512 * 0.3125 = 160px, 128 * 0.3125 = 40px) */
+    background-size: 160px 40px;
+    /* Default: Covered / Unrevealed Tile (Column 2) */
+    background-position: -40px 0px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Sprite Tile Mapping */
+  .ms-cell.flagged { background-position: -100px 0px; }            /* Flag Tile (Col 5) */
+  .ms-cell.revealed-empty { background-position: 0px 0px; }       /* Flat Blank Tile (Col 0) */
+  .ms-cell.mine-revealed { background-position: -80px 0px; }        /* Black Mine (Col 4) */
+  .ms-cell.mine-hit { background-position: -120px 0px; }           /* Red Exploded Mine (Col 6) */
+
+  /* Number Tiles 1 to 8 (Row 2 on the sprite map) */
+  .ms-cell[data-num="1"] { background-position: 0px -20px; }
+  .ms-cell[data-num="2"] { background-position: -20px -20px; }
+  .ms-cell[data-num="3"] { background-position: -40px -20px; }
+  .ms-cell[data-num="4"] { background-position: -60px -20px; }
+  .ms-cell[data-num="5"] { background-position: -80px -20px; }
+  .ms-cell[data-num="6"] { background-position: -100px -20px; }
+  .ms-cell[data-num="7"] { background-position: -120px -20px; }
+  .ms-cell[data-num="8"] { background-position: -140px -20px; }
+
+  .ms-cell.revealed {
+    border: 1px solid #7b7b7b;
+    background: #c0c0c0;
+    box-sizing: border-box;
+  }
+
+  /* Classic Minesweeper digit colors */
+  .ms-cell[data-num="1"] { color: #0000ff; }
+  .ms-cell[data-num="2"] { color: #008000; }
+  .ms-cell[data-num="3"] { color: #ff0000; }
+  .ms-cell[data-num="4"] { color: #000080; }
+  .ms-cell[data-num="5"] { color: #800000; }
+  .ms-cell[data-num="6"] { color: #008080; }
+  .ms-cell[data-num="7"] { color: #000000; }
+  .ms-cell[data-num="8"] { color: #808080; }
+
   /* Windows start closed; JS toggles this via inline display */
   #links-window,
   #about-window,
-  #message-window {
+  #message-window,
+  #draw-window {
     display: none;
   }
 
@@ -352,6 +628,17 @@
   }
 
   /* ---------- Icon links ---------- */
+
+  .links-container {
+  background: #ffffff;
+  padding: 24px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-sizing: border-bottom;
+}
+
   ul.links {
     list-style: none;
     padding: 0;
@@ -367,43 +654,42 @@
     justify-content: center;
     width: var(--icon-size);
     height: var(--icon-size);
-    border-radius: 10px;
-    background: var(--color-ink);
-    transition: background-color 0.15s ease, transform 0.15s ease;
+    background: #C0C0C0;
+    box-shadow:
+      inset -1px -1px 0 #0a0a0a,
+      inset 1px 1px 0 #ffffff,
+      inset -2px -2px 0 #808080,
+      inset 2px 2px 0 #dfdfdf;
+    text-decoration: none;
   }
 
-  ul.links a:hover,
-  ul.links a:focus-visible {
-    background: var(--color-accent);
-    transform: translateY(-2px);
+  ul.links a:active {
+    box-shadow:
+      inset 1px 1px 0 #0a0a0a,
+      inset -1px -1px 0 #ffffff;
+    padding-top: 2px;
+    padding-left: 2px;
   }
 
   ul.links svg {
     width: 22px;
     height: 22px;
-    fill: #FFFFFF; /* plain white icons */
+    fill: #000000; 
   }
 
-  a:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+  ul.links a:focus-visible {
+    outline: 1px dotted #000000;
+    outline-offset: -4px;
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <!-- Change your name here -->
-  <h1>Jordan Ellis</h1>
-
-</div>
 
 <div id="welcome-window">
   <div class="window-titlebar" data-drag-handle>
-    <span class="title">welcome</span>
+    <span class="title">Welcome</span>
     <div class="titlebar-buttons">
-      <button aria-hidden="true">_</button>
-      <button aria-hidden="true">□</button>
+
       <button aria-hidden="true">✕</button>
     </div>
   </div>
@@ -415,117 +701,88 @@
   </div>
 </div>
 
-<!-- ============================================================
-     Draggable window: About Me.
-     Edit the paragraph text below to change your bio.
-     ============================================================ -->
 <div id="about-window">
   <div class="window-titlebar" data-drag-handle>
-    <span class="title">about me</span>
+    <span class="title">About Me</span>
     <div class="titlebar-buttons">
-      <button aria-hidden="true">_</button>
-      <button aria-hidden="true">□</button>
+
       <button aria-label="Close window">✕</button>
     </div>
   </div>
   <div class="window-body">
     <p>
-      Product designer based in Minneapolis. I design and build small,
-      useful tools — mostly for people who work with their hands.
+      Hello! My name is NOCTULLA and I am a content creator and game developer! Feel free to contact me via the mail below.
     </p>
   </div>
 </div>
 
-<!-- ============================================================
-     Draggable window containing the icon links.
-     Drag it by its title bar. Starting position is set by the
-     #links-window "top" / "left" values in the CSS above.
-     ============================================================ -->
-<div id="links-window">
+<div id="links-window" class="window">
   <div class="window-titlebar" data-drag-handle>
-    <span class="title">links</span>
+    <span class="title">Links</span>
     <div class="titlebar-buttons">
-      <button aria-hidden="true">_</button>
-      <button aria-hidden="true">□</button>
+
       <button aria-label="Close window">✕</button>
     </div>
   </div>
   <div class="window-body">
-    <ul class="links">
+    <div class="links-container">
+      <ul class="links">
 
-      <!-- YouTube -->
-      <li>
-        <a href="https://youtube.com/@NOCTULLA1" aria-label="YouTube" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
-          </svg>
-        </a>
-      </li>
+        <li>
+          <a href="https://youtube.com/@NOCTULLA1" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/>
+            </svg>
+          </a>
+        </li>
 
-      <!-- Roblox (2020-era mark: tilted square with cut-out center) -->
-      <li>
-        <a href="https://roblox.com/users/253989649/profile" aria-label="Roblox" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .8 23.2 12 12 23.2.8 12 12 .8Zm0 6.8-4.4 4.4 4.4 4.4 4.4-4.4L12 7.6Z"/>
-          </svg>
-        </a>
-      </li>
+        <li>
+          <a href="https://discord.gg/qkhammBURK" aria-label="Discord" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.37-.44.87-.61 1.25a18.3 18.3 0 0 0-5.48 0c-.17-.39-.4-.88-.62-1.25a.08.08 0 0 0-.08-.04c-1.7.29-3.32.8-4.89 1.52a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06c2.05 1.5 4.04 2.42 5.99 3.03a.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 0 0-.04-.11c-.66-.25-1.28-.55-1.87-.9a.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01c.12.1.24.2.37.3a.08.08 0 0 1-.01.12c-.6.35-1.21.65-1.87.9a.08.08 0 0 0-.04.11c.36.69.77 1.36 1.22 1.99a.08.08 0 0 0 .09.03c1.96-.61 3.95-1.52 6-3.03a.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/>
+            </svg>
+          </a>
+        </li>
 
-      <!-- Discord -->
-      <li>
-        <a href="https://discord.com/628742059951521799" aria-label="Discord" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.37-.44.87-.61 1.25a18.3 18.3 0 0 0-5.48 0c-.17-.39-.4-.88-.62-1.25a.08.08 0 0 0-.08-.04c-1.7.29-3.32.8-4.89 1.52a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06c2.05 1.5 4.04 2.42 5.99 3.03a.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 0 0-.04-.11c-.66-.25-1.28-.55-1.87-.9a.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01c.12.1.24.2.37.3a.08.08 0 0 1-.01.12c-.6.35-1.21.65-1.87.9a.08.08 0 0 0-.04.11c.36.69.77 1.36 1.22 1.99a.08.08 0 0 0 .09.03c1.96-.61 3.95-1.52 6-3.03a.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/>
-          </svg>
-        </a>
-      </li>
+        <li>
+          <a href="https://tiktok.com/@noctulla_" aria-label="TikTok" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16.6 0h-3.3v15.5a3.5 3.5 0 1 1-2.5-3.4V8.7a6.9 6.9 0 1 0 5.8 6.8V8.1a8.3 8.3 0 0 0 4.9 1.6V6.4c-2.6 0-4.9-2-4.9-6.4Z"/>
+            </svg>
+          </a>
+        </li>
 
-      <!-- TikTok -->
-      <li>
-        <a href="https://tiktok.com/@noctulla_" aria-label="TikTok" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16.6 0h-3.3v15.5a3.5 3.5 0 1 1-2.5-3.4V8.7a6.9 6.9 0 1 0 5.8 6.8V8.1a8.3 8.3 0 0 0 4.9 1.6V6.4c-2.6 0-4.9-2-4.9-6.4Z"/>
-          </svg>
-        </a>
-      </li>
+        <li>
+          <a href="https://www.twitch.tv/noctulla" aria-label="Twitch" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.3 0 1.1 3.2v17.6h6v3.2h3.2l3.2-3.2h4.8L23.9 15V0H4.3Zm17.5 14L18.7 17h-4.8l-3.2 3.2V17H5.2V2.1h16.6V14Z"/>
+              <path d="M17.6 5.4h2.1v6.4h-2.1zm-5.8 0h2.2v6.4h-2.2z"/>
+            </svg>
+          </a>
+        </li>
 
-      <!-- Twitch -->
-      <li>
-        <a href="https://www.twitch.tv/noctulla" aria-label="Twitch" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4.3 0 1.1 3.2v17.6h6v3.2h3.2l3.2-3.2h4.8L23.9 15V0H4.3Zm17.5 14L18.7 17h-4.8l-3.2 3.2V17H5.2V2.1h16.6V14Z"/>
-            <path d="M17.6 5.4h2.1v6.4h-2.1zm-5.8 0h2.2v6.4h-2.2z"/>
-          </svg>
-        </a>
-      </li>
+        <li>
+          <a href="https://www.instagram.com/noctulla_/" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg>
+          </a>
+        </li>
 
-    </ul>
+        <li>
+          <a href="https://roblox.com/users/253989649/profile" aria-label="Roblox" target="_blank" rel="noopener">
+            <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Roblox</title><path d="M18.926 23.998 0 18.892 5.075.002 24 5.108ZM15.348 10.09l-5.282-1.453-1.414 5.273 5.282 1.453z"/></svg>
+          </a>
+        </li>
+
+      </ul>
+    </div>
   </div>
 </div>
 
-<!-- ============================================================
-     Draggable window: send a message that arrives in your DMs.
-
-     SETUP REQUIRED — read before this will work:
-     Sending a DM (rather than posting to a channel) requires a
-     Discord bot, and a bot's token must never live in this file
-     or any client-side code — anyone visiting the page could
-     view source and steal it, giving them full control of your
-     bot. So this form talks to a small backend you deploy
-     yourself, which holds the token safely and relays the
-     message as a DM to your Discord ID.
-
-     1. Deploy the included discord-dm-worker.js as a Cloudflare
-        Worker (free tier). Instructions are in that file.
-     2. Paste the Worker's URL into BACKEND_URL below, in place
-        of "PASTE YOUR BACKEND URL HERE".
-     ============================================================ -->
 <div id="message-window">
   <div class="window-titlebar" data-drag-handle>
-    <span class="title">send a message</span>
+    <span class="title">Message</span>
     <div class="titlebar-buttons">
-      <button aria-hidden="true">_</button>
-      <button aria-hidden="true">□</button>
+
       <button aria-label="Close window">✕</button>
     </div>
   </div>
@@ -543,57 +800,78 @@
   </div>
 </div>
 
-<script>
-// Replace this with your actual Cloudflare Worker URL
-const BACKEND_URL = 'https://portfolio-backend.YOUR_USERNAME.workers.dev';
+<div id="draw-window">
+  <div class="window-titlebar" data-drag-handle>
+    <span class="title">NOCPaint</span>
+    <div class="titlebar-buttons">
 
-(function () {
-  const form = document.getElementById('message-form');
-  const status = document.getElementById('msg-status');
+      <button aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <div class="window-body">
+    <form id="draw-form">
+      <label class="msg-field" for="draw-name">Name</label>
+      <input class="msg-input" type="text" id="draw-name" maxlength="60" required>
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+      <label class="msg-field">Canvas</label>
+      
+      <div class="color-palette" id="color-palette">
+        <div class="brush-sizes" id="brush-sizes">
+          <button type="button" class="brush-btn" data-size="2" title="Small Brush">
+            <span class="dot dot-small"></span>
+          </button>
+          <button type="button" class="brush-btn active" data-size="5" title="Medium Brush">
+            <span class="dot dot-medium"></span>
+          </button>
+          <button type="button" class="brush-btn" data-size="10" title="Large Brush">
+            <span class="dot dot-large"></span>
+          </button>
+        </div>
 
-    const name = document.getElementById('msg-name').value.trim();
-    const body = document.getElementById('msg-body').value.trim();
+        <button type="button" class="color-swatch active" data-color="#000000" style="background-color: #000000;" title="Black"></button>
+        <button type="button" class="color-swatch" data-color="#7f7f7f" style="background-color: #7f7f7f;" title="Gray 50%"></button>
+        <button type="button" class="color-swatch" data-color="#880015" style="background-color: #880015;" title="Dark Red"></button>
+        <button type="button" class="color-swatch" data-color="#ed1c23" style="background-color: #ed1c23;" title="Red"></button>
+        <button type="button" class="color-swatch" data-color="#ff7f27" style="background-color: #ff7f27;" title="Orange"></button>
+        <button type="button" class="color-swatch" data-color="#fff200" style="background-color: #fff200;" title="Yellow"></button>
+        <button type="button" class="color-swatch" data-color="#22b14c" style="background-color: #22b14c;" title="Green"></button>
+        <button type="button" class="color-swatch" data-color="#00a2e8" style="background-color: #00a2e8;" title="Turquoise"></button>
+        <button type="button" class="color-swatch" data-color="#3f48cc" style="background-color: #3f48cc;" title="Indigo"></button>
+        <button type="button" class="color-swatch" data-color="#a349a4" style="background-color: #a349a4;" title="Purple"></button>
+        <button type="button" class="color-swatch" data-color="#ffffff" style="background-color: #ffffff;" title="White"></button>
+      </div>
 
-    if (!name || !body) return;
+      <canvas class="msg-canvas" id="paint-canvas" width="242" height="120"></canvas>
+      
+      <div class="canvas-tools">
+        <button type="button" class="btn-clear" id="btn-clear">Clear</button>
+      </div>
 
-    status.textContent = 'Sending...';
+      <button class="msg-send" type="submit">Send Art</button>
+      <div class="msg-status" id="draw-status"></div>
+    </form>
+  </div>
+</div>
 
-    try {
-      const res = await fetch(BACKEND_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        // We only send the raw data; the Worker formats it for Discord
-        body: JSON.stringify({
-          name: name,
-          message: body
-        })
-      });
+<div id="minesweeper-window" class="window">
+  <div class="window-titlebar" data-drag-handle>/
+    <span class="title">Minesweeper</span>
+    <div class="titlebar-buttons">
+      <button aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <div class="window-body">
+    <div class="minesweeper-container">
+      <div class="ms-header">
+        <div class="ms-counter" id="ms-mine-count">010</div>
+        <button type="button" class="ms-face-btn" id="ms-reset-btn" title="Reset Game">😊</button>
+        <div class="ms-counter" id="ms-timer">000</div>
+      </div>
+      <div class="ms-board" id="ms-board"></div>
+    </div>
+  </div>
+</div>
 
-      if (res.ok) {
-        status.textContent = 'Sent!';
-        form.reset();
-      } else {
-        const text = await res.text();
-        console.log(res.status, text);
-        status.textContent = `Error ${res.status}`;
-      }
-    } catch (err) {
-      status.textContent = 'Network error.';
-      console.error(err);
-    }
-  });
-})();
-</script>
-
-<!-- ============================================================
-     Taskbar. Each button toggles the matching window via
-     data-target, which must match a window's id.
-     ============================================================ -->
 <div class="taskbar">
   <button class="taskbar-btn start" aria-hidden="true">Start</button>
   <div class="taskbar-divider"></div>
@@ -618,137 +896,525 @@ const BACKEND_URL = 'https://portfolio-backend.YOUR_USERNAME.workers.dev';
         <path d="M1 3.5 8 9l7-5.5" fill="none" stroke="#000000" stroke-width="1"/>
       </svg>
     </button>
+    <button class="taskbar-btn" data-target="draw-window" aria-label="Paint" title="Paint">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 1c-1.5 0-3 1.5-3 3v2l-5 5c-.5.5-.5 1.5 0 2 .5.5 1.5.5 2 0l5-5h2c1.5 0 3-1.5 3-3V2c0-1-.5-1-1-1zm-1 6L5 12 4 11l5-5h1v1z" fill="#000000"/>
+      </svg>
+    </button>
+    <button class="taskbar-btn" data-target="minesweeper-window" aria-label="Minesweeper" title="Minesweeper">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="9" r="5" fill="#000000"/>
+        <rect x="7" y="2" width="2" height="3" fill="#000000"/>
+        <path d="M4 4l2 2M12 4l-2 2M2 9h3M11 9h3" stroke="#000000" stroke-width="1.5"/>
+        <circle cx="8" cy="2" r="1" fill="#ff0000"/>
+      </svg>
+    </button>
   </div>
   <div class="taskbar-clock" id="taskbar-clock">12:00 PM</div>
 </div>
 
 <script>
+const BACKEND_URL = 'https://website-backend.noctulla.workers.dev';
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ==========================================
+  // 1. TEXT MESSAGE WINDOW
+  // ==========================================
+  const msgForm = document.getElementById('message-form');
+  const msgStatus = document.getElementById('msg-status');
+
+  if (msgForm) {
+    msgForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('msg-name').value.trim();
+      const body = document.getElementById('msg-body').value.trim();
+
+      if (!name || !body) return;
+      msgStatus.textContent = 'Sending...';
+
+      try {
+        const res = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, message: body })
+        });
+
+        if (res.ok) {
+          msgStatus.textContent = 'Sent!';
+          msgForm.reset();
+        } else {
+          msgStatus.textContent = `Error ${res.status}`;
+        }
+      } catch (err) {
+        msgStatus.textContent = 'Network error.';
+      }
+    });
+  }
+
+  // ==========================================
+  // 2. PAINT / DRAWING WINDOW
+  // ==========================================
+  const drawForm = document.getElementById('draw-form');
+  const drawStatus = document.getElementById('draw-status');
+  const canvas = document.getElementById('paint-canvas');
+
+  if (drawForm && canvas) {
+    const ctx = canvas.getContext('2d');
+    const clearBtn = document.getElementById('btn-clear');
+    const colorSwatches = document.querySelectorAll('.color-swatch');
+    const brushBtns = document.querySelectorAll('.brush-btn');
+
+    let isDrawing = false;
+    let hasDrawn = false;
+    let currentColor = '#000000';
+
+    // Default brush styling
+    ctx.lineWidth = 5; // Default medium brush
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = currentColor;
+
+    // Color Swatch Selection
+    colorSwatches.forEach((swatch) => {
+      swatch.addEventListener('click', (e) => {
+        currentColor = e.target.getAttribute('data-color');
+        ctx.strokeStyle = currentColor;
+
+        colorSwatches.forEach(s => s.classList.remove('active'));
+        e.target.classList.add('active');
+      });
+    });
+
+    // Brush Size Selection
+    brushBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const targetBtn = e.target.closest('.brush-btn');
+        if (!targetBtn) return;
+
+        const newSize = parseInt(targetBtn.getAttribute('data-size'), 10);
+        ctx.lineWidth = newSize;
+
+        brushBtns.forEach(b => b.classList.remove('active'));
+        targetBtn.classList.add('active');
+      });
+    });
+
+    function getCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      // Calculate the scale ratios (internal resolution vs rendered screen size)
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      hasDrawn = true;
+      const pos = getCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault(); 
+      const pos = getCoords(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      if (isDrawing) {
+        isDrawing = false;
+        ctx.closePath();
+      }
+    }
+
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    // Touch events for mobile/tablets
+    canvas.addEventListener('touchstart', (e) => { startDrawing(e); e.preventDefault(); });
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+
+    // Clear canvas button
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hasDrawn = false;
+      });
+    }
+
+    // Submit form logic
+    drawForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('draw-name').value.trim();
+
+      if (!name || !hasDrawn) {
+        drawStatus.textContent = 'Please draw something first!';
+        return;
+      }
+
+      // Create off-screen canvas to bake white background
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = canvas.width;
+      exportCanvas.height = canvas.height;
+      const exportCtx = exportCanvas.getContext('2d');
+
+      exportCtx.fillStyle = '#ffffff';
+      exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      exportCtx.drawImage(canvas, 0, 0);
+
+      const imageData = exportCanvas.toDataURL('image/png');
+      drawStatus.textContent = 'Sending art...';
+
+      try {
+        const res = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            message: "*Sent a drawing!*",
+            image: imageData
+          })
+        });
+
+        if (res.ok) {
+          drawStatus.textContent = 'Sent!';
+          drawForm.reset();
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          hasDrawn = false;
+        } else {
+          drawStatus.textContent = `Error ${res.status}`;
+        }
+      } catch (err) {
+        drawStatus.textContent = 'Network error.';
+      }
+    });
+  }
+
+  // ==========================================
+  // MINESWEEPER GAME LOGIC (Tile Map Edition)
+  // ==========================================
+  const boardEl = document.getElementById('ms-board');
+  const resetBtn = document.getElementById('ms-reset-btn');
+  const mineCountEl = document.getElementById('ms-mine-count');
+  const timerEl = document.getElementById('ms-timer');
+
+  if (boardEl) {
+    const ROWS = 9;
+    const COLS = 9;
+    const MINES = 10;
+
+    let cells = [];
+    let boardState = [];
+    let gameStarted = false;
+    let gameOver = false;
+    let flagsCount = 0;
+    let timerInterval = null;
+    let seconds = 0;
+
+    function initMinesweeper() {
+      clearInterval(timerInterval);
+      seconds = 0;
+      flagsCount = 0;
+      gameStarted = false;
+      gameOver = false;
+
+      timerEl.textContent = '000';
+      mineCountEl.textContent = String(MINES).padStart(3, '0');
+      resetBtn.textContent = ':)';
+
+      boardEl.innerHTML = '';
+      cells = [];
+      boardState = [];
+
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const idx = r * COLS + c;
+          boardState.push({
+            row: r,
+            col: c,
+            mine: false,
+            revealed: false,
+            flagged: false,
+            count: 0
+          });
+
+          const cellEl = document.createElement('div');
+          cellEl.classList.add('ms-cell');
+          cellEl.dataset.index = idx;
+
+          cellEl.addEventListener('click', () => handleCellClick(idx));
+          cellEl.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            handleCellRightClick(idx);
+          });
+
+          boardEl.appendChild(cellEl);
+          cells.push(cellEl);
+        }
+      }
+    }
+
+    function generateMines(firstClickIdx) {
+      let planted = 0;
+      while (planted < MINES) {
+        const randIdx = Math.floor(Math.random() * (ROWS * COLS));
+        if (randIdx !== firstClickIdx && !boardState[randIdx].mine) {
+          boardState[randIdx].mine = true;
+          planted++;
+        }
+      }
+
+      for (let i = 0; i < boardState.length; i++) {
+        if (boardState[i].mine) continue;
+        const neighbors = getNeighbors(i);
+        boardState[i].count = neighbors.filter(nIdx => boardState[nIdx].mine).length;
+      }
+    }
+
+    function getNeighbors(idx) {
+      const { row, col } = boardState[idx];
+      const neighbors = [];
+
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = row + dr;
+          const nc = col + dc;
+          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+            neighbors.push(nr * COLS + nc);
+          }
+        }
+      }
+      return neighbors;
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        seconds++;
+        if (seconds > 999) seconds = 999;
+        timerEl.textContent = String(seconds).padStart(3, '0');
+      }, 1000);
+    }
+
+    function handleCellClick(idx) {
+      if (gameOver || boardState[idx].flagged || boardState[idx].revealed) return;
+
+      if (!gameStarted) {
+        gameStarted = true;
+        generateMines(idx);
+        startTimer();
+      }
+
+      revealCell(idx);
+      checkWinCondition();
+    }
+
+    function handleCellRightClick(idx) {
+      if (gameOver || boardState[idx].revealed) return;
+
+      const cell = boardState[idx];
+      cell.flagged = !cell.flagged;
+      flagsCount += cell.flagged ? 1 : -1;
+
+      const remainingMines = MINES - flagsCount;
+      mineCountEl.textContent = String(Math.max(-99, remainingMines)).padStart(3, '0');
+
+      if (cell.flagged) {
+        cells[idx].classList.add('flagged');
+      } else {
+        cells[idx].classList.remove('flagged');
+      }
+    }
+
+    function revealCell(idx) {
+      const cell = boardState[idx];
+      if (cell.revealed || cell.flagged) return;
+
+      cell.revealed = true;
+      const el = cells[idx];
+
+      if (cell.mine) {
+        el.classList.add('mine-hit');
+        triggerGameOver(false);
+        return;
+      }
+
+      if (cell.count > 0) {
+        el.dataset.num = cell.count;
+      } else {
+        el.classList.add('revealed-empty');
+        const neighbors = getNeighbors(idx);
+        neighbors.forEach(nIdx => revealCell(nIdx));
+      }
+    }
+
+    function triggerGameOver(won) {
+      gameOver = true;
+      clearInterval(timerInterval);
+      resetBtn.textContent = won ? ':D' : 'X(';
+
+      boardState.forEach((cell, idx) => {
+        if (cell.mine && !won) {
+          if (!cells[idx].classList.contains('mine-hit')) {
+            cells[idx].classList.add('mine-revealed');
+          }
+        }
+      });
+    }
+
+    function checkWinCondition() {
+      if (gameOver) return;
+
+      const unrevealedNonMines = boardState.filter(c => !c.mine && !c.revealed).length;
+      if (unrevealedNonMines === 0) {
+        triggerGameOver(true);
+      }
+    }
+
+    resetBtn.addEventListener('click', initMinesweeper);
+    initMinesweeper();
+  }
+
   // ============================================================
   // Drag behavior for windows.
-  // Drag by each window's title bar; position is clamped to
-  // stay on screen. Works for any number of ".window" elements.
   // ============================================================
-  (function () {
+  let highestZ = 100;
+  
+  document.querySelectorAll('#about-window, #links-window, #message-window, #welcome-window, #draw-window, #minesweeper-window').forEach(makeDraggable);
 
-    let highestZ = 100;
-    
-    document.querySelectorAll('#about-window, #links-window, #message-window, #welcome-window').forEach(makeDraggable);
+  function makeDraggable(win) {
+    const bar = win.querySelector('[data-drag-handle]');
+    if (!bar) return;
 
-    function makeDraggable(win) {
-      const bar = win.querySelector('[data-drag-handle]');
-      let dragging = false;
-      let offsetX = 0;
-      let offsetY = 0;
+    let dragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
 
-      win.addEventListener('mousedown', () => {
-        win.style.zIndex = ++highestZ;
-      });
+    win.addEventListener('mousedown', () => {
+      win.style.zIndex = ++highestZ;
+    });
 
-      win.addEventListener('touchstart', () => {
-        win.style.zIndex = ++highestZ;
-      }, { passive: true });
+    win.addEventListener('touchstart', () => {
+      win.style.zIndex = ++highestZ;
+    }, { passive: true });
 
-      function startDrag(clientX, clientY) {
-        const rect = win.getBoundingClientRect();
-        win.style.zIndex = ++highestZ;
-        dragging = true;
-        offsetX = clientX - rect.left;
-        offsetY = clientY - rect.top;
-        // Switch from centered transform to absolute top/left so dragging is direct.
-        win.style.left = rect.left + 'px';
-        win.style.top = rect.top + 'px';
-        win.style.transform = 'none';
-      }
-
-      function moveDrag(clientX, clientY) {
-        if (!dragging) return;
-        const maxX = window.innerWidth - win.offsetWidth;
-        const maxY = window.innerHeight - win.offsetHeight;
-        const x = Math.min(Math.max(0, clientX - offsetX), maxX);
-        const y = Math.min(Math.max(0, clientY - offsetY), maxY);
-        win.style.left = x + 'px';
-        win.style.top = y + 'px';
-      }
-
-      function endDrag() {
-        dragging = false;
-      }
-
-      // Mouse
-      bar.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
-      window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
-      window.addEventListener('mouseup', endDrag);
-
-      // Touch
-      bar.addEventListener('touchstart', (e) => {
-        const t = e.touches[0];
-        startDrag(t.clientX, t.clientY);
-      }, { passive: true });
-      window.addEventListener('touchmove', (e) => {
-        const t = e.touches[0];
-        moveDrag(t.clientX, t.clientY);
-      }, { passive: true });
-      window.addEventListener('touchend', endDrag);
+    function startDrag(clientX, clientY) {
+      const rect = win.getBoundingClientRect();
+      win.style.zIndex = ++highestZ;
+      dragging = true;
+      offsetX = clientX - rect.left;
+      offsetY = clientY - rect.top;
+      win.style.left = rect.left + 'px';
+      win.style.top = rect.top + 'px';
+      win.style.transform = 'none';
     }
-  })();
+
+    function moveDrag(clientX, clientY) {
+      if (!dragging) return;
+      const maxX = window.innerWidth - win.offsetWidth;
+      const maxY = window.innerHeight - win.offsetHeight;
+      const x = Math.min(Math.max(0, clientX - offsetX), maxX);
+      const y = Math.min(Math.max(0, clientY - offsetY), maxY);
+      win.style.left = x + 'px';
+      win.style.top = y + 'px';
+    }
+
+    function endDrag() {
+      dragging = false;
+    }
+
+    bar.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+    window.addEventListener('mouseup', endDrag);
+
+    bar.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      moveDrag(t.clientX, t.clientY);
+    }, { passive: true });
+    window.addEventListener('touchend', endDrag);
+  }
 
   // ============================================================
   // Taskbar: open/close windows.
-  // Windows start closed. State is tracked explicitly in JS
-  // (rather than inferred from inline styles) so every click
-  // behaves consistently.
   // ============================================================
-    (function () {
+  const taskbarButtons = document.querySelectorAll('.taskbar-btn[data-target]');
 
-    const taskbarButtons =
-        document.querySelectorAll('.taskbar-btn[data-target]');
+  taskbarButtons.forEach((btn) => {
+    const win = document.getElementById(btn.dataset.target);
+    if (!win) return;
 
-    const welcome = document.getElementById('welcome-window');
+    // Start windows closed
+    win.style.display = 'none';
 
-    taskbarButtons.forEach((btn) => {
-      const win = document.getElementById(btn.dataset.target);
-      if (!win) return;
+    btn.addEventListener('click', () => {
+      const isCurrentlyOpen = win.style.display === 'block';
+      win.style.display = isCurrentlyOpen ? 'none' : 'block';
+      btn.classList.toggle('open', !isCurrentlyOpen);
 
-      let isOpen = false; // explicit state, not inferred from the DOM
-
-      function setOpen(open) {
-        isOpen = open;
-        win.style.display = open ? 'block' : 'none';
-        btn.classList.toggle('open', open);
-      }
-
-      setOpen(false); // enforce closed starting state
-
-      btn.addEventListener('click', () => {
-        setOpen(!isOpen);
-        });
-
-      // Wire up this window's title-bar ✕ button to close it.
-      const closeBtn = win.querySelector('.titlebar-buttons button:last-child');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', () => setOpen(false));
+      // Bring window to front when opened
+      if (!isCurrentlyOpen) {
+        win.style.zIndex = ++highestZ;
       }
     });
-  })();
+  });
 
   // ============================================================
-  // Taskbar clock. Updates every second; swap the options below
-  // for a different time format.
+  // Universal Close Buttons (Fixes Welcome & all other windows)
   // ============================================================
-  (function () {
-    const clock = document.getElementById('taskbar-clock');
-    if (!clock) return;
+  document.querySelectorAll('.titlebar-buttons button').forEach((closeBtn) => {
+    closeBtn.addEventListener('click', () => {
+      // Find the window parent of this button
+      const win = closeBtn.closest('#welcome-window, #about-window, #links-window, #message-window, #draw-window, #minesweeper-window');
+      
+      if (win) {
+        win.style.display = 'none';
 
+        // Un-highlight taskbar button if this window has one
+        const taskbarBtn = document.querySelector(`.taskbar-btn[data-target="${win.id}"]`);
+        if (taskbarBtn) {
+          taskbarBtn.classList.remove('open');
+        }
+      }
+    });
+  });
+
+  // ============================================================
+  // Taskbar clock.
+  // ============================================================
+  const clock = document.getElementById('taskbar-clock');
+  if (clock) {
     function tick() {
       clock.textContent = new Date().toLocaleTimeString([], {
         hour: 'numeric',
         minute: '2-digit',
       });
     }
-
     tick();
     setInterval(tick, 1000);
-  })();
+  }
+
+});
 </script>
 </body>
 </html>
