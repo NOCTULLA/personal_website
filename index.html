@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VH131P8ZGH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VH131P8ZGH');
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NOCTULLA</title>
+<title>NOCTULLA95</title>
+<link rel="icon" type="image/png" href="NOCTULLA95.png">
 
 <style>
-  /* ============================================================
-     CUSTOMIZE ME: change these and the whole page updates.
-     ============================================================ */
   :root {
-    --color-bg: #008080;      /* Windows 95 teal desktop background */
+    --color-bg: #76378f;      /* Windows 95 teal desktop background */
     --color-ink: #1E2A24;     /* text color + icon button background */
     --color-accent: #4B6B58;  /* icon button hover color */
     --color-muted: #6E7A73;   /* secondary text */
@@ -130,17 +139,25 @@
       inset -1px -1px 0 #ffffff;
   }
 
-  .msg-canvas {
+  .canvas-wrapper {
     width: 100%;
-    height: 120px;
-    background: #ffffff;
-    cursor: crosshair;
     margin-bottom: 0.2rem;
+    padding: 2px; /* Leaves room for the border */
+    background: #ffffff;
     box-shadow:
       inset 1px 1px 0 #0a0a0a,
       inset -1px -1px 0 #dfdfdf,
       inset 2px 2px 0 #808080,
       inset -2px -2px 0 #ffffff;
+  }
+
+  .msg-canvas {
+    display: block;
+    width: 100%;
+    height: 116px; /* Slightly shorter to account for the wrapper's 4px padding */
+    background: #ffffff;
+    cursor: crosshair;
+    border: none;
   }
 
   .canvas-tools {
@@ -735,6 +752,9 @@
   </div>
 
   <div class="window-body">
+    <h4>
+      Welcome to NOCTULLA95!
+    </h4>
     <p>
       Click the icons below to learn more about me, browse my links, send me a message, or play a quick game of Minesweeper! You can also drag the windows around.
     </p>
@@ -913,6 +933,14 @@
           <button type="button" class="brush-btn" data-size="10" title="Large Brush">
             <span class="dot dot-large"></span>
           </button>
+          
+          <button type="button" class="brush-btn" id="btn-fill" title="Fill Bucket" style="margin-left: 8px;">
+            <svg viewBox="0 0 16 16" width="14" height="14" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.8 4.2L5.5 11.5l-2.1-2.1L10.7 2.1l2.1 2.1z" fill="none" stroke="#000000" stroke-linejoin="round"/>
+              <path d="M9.6 3.2L4.5 8.3l1.1 1.1 5.1-5.1-1.1-1.1z" fill="#000000"/>
+              <path d="M3 11 l-1.5 2 a 1.5 1.5 0 0 0 3 0 z" fill="#000000"/>
+            </svg>
+          </button>
         </div>
 
         <button type="button" class="color-swatch active" data-color="#000000" style="background-color: #000000;" title="Black"></button>
@@ -928,7 +956,9 @@
         <button type="button" class="color-swatch" data-color="#ffffff" style="background-color: #ffffff;" title="White"></button>
       </div>
 
-      <canvas class="msg-canvas" id="paint-canvas" width="242" height="120"></canvas>
+      <div class="canvas-wrapper">
+        <canvas class="msg-canvas" id="paint-canvas" width="238" height="116"></canvas>
+      </div>
       
       <div class="canvas-tools">
         <button type="button" class="btn-clear" id="btn-clear">Clear</button>
@@ -1047,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
+ // ==========================================
   // 2. PAINT / DRAWING WINDOW
   // ==========================================
   const drawForm = document.getElementById('draw-form');
@@ -1057,15 +1087,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (drawForm && canvas) {
     const ctx = canvas.getContext('2d');
     const clearBtn = document.getElementById('btn-clear');
+    const fillBtn = document.getElementById('btn-fill');
     const colorSwatches = document.querySelectorAll('.color-swatch');
-    const brushBtns = document.querySelectorAll('.brush-btn');
+    
+    // Select only the brush size buttons, exclude the fill button
+    const brushBtns = document.querySelectorAll('.brush-btn:not(#btn-fill)');
 
     let isDrawing = false;
     let hasDrawn = false;
     let currentColor = '#000000';
+    let currentTool = 'brush'; // Keeps track of whether we are brushing or filling
+
+    // Initialize Canvas with White Background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Default brush styling
-    ctx.lineWidth = 5; // Default medium brush
+    ctx.lineWidth = 5; 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.strokeStyle = currentColor;
@@ -1084,6 +1122,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Brush Size Selection
     brushBtns.forEach((btn) => {
       btn.addEventListener('click', (e) => {
+        currentTool = 'brush'; // Switch back to brush
+        if (fillBtn) fillBtn.classList.remove('active'); // Deselect fill button
+
         const targetBtn = e.target.closest('.brush-btn');
         if (!targetBtn) return;
 
@@ -1095,31 +1136,120 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // Fill Button Selection
+    if (fillBtn) {
+      fillBtn.addEventListener('click', () => {
+        currentTool = 'fill';
+        brushBtns.forEach(b => b.classList.remove('active')); // Deselect brushes
+        fillBtn.classList.add('active'); // Highlight fill button
+      });
+    }
+
     function getCoords(e) {
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-      // Calculate the scale ratios (internal resolution vs rendered screen size)
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
 
       return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
+        x: Math.floor((clientX - rect.left) * scaleX),
+        y: Math.floor((clientY - rect.top) * scaleY)
       };
     }
 
-    function startDrawing(e) {
-      isDrawing = true;
-      hasDrawn = true;
+    // Helper for Flood Fill
+    function hexToRgb(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return [r, g, b, 255];
+    }
+
+    // Flood Fill Algorithm
+    function floodFill(startX, startY, fillColorHex) {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+      
+      const startPos = (startY * canvas.width + startX) * 4;
+      const startR = data[startPos];
+      const startG = data[startPos + 1];
+      const startB = data[startPos + 2];
+      const startA = data[startPos + 3];
+
+      const [fillR, fillG, fillB, fillA] = hexToRgb(fillColorHex);
+
+      // If clicking same color, do nothing
+      if (startR === fillR && startG === fillG && startB === fillB) return;
+
+      const stack = [[startX, startY]];
+      
+      function matchStartColor(pos) {
+        return data[pos] === startR && data[pos + 1] === startG && data[pos + 2] === startB;
+      }
+      
+      function colorPixel(pos) {
+        data[pos] = fillR;
+        data[pos + 1] = fillG;
+        data[pos + 2] = fillB;
+        data[pos + 3] = fillA;
+      }
+
+      while (stack.length > 0) {
+        const [x, y] = stack.pop();
+        let pixelPos = (y * canvas.width + x) * 4;
+
+        let currY = y;
+        while (currY >= 0 && matchStartColor(pixelPos)) {
+          pixelPos -= canvas.width * 4;
+          currY--;
+        }
+        
+        pixelPos += canvas.width * 4;
+        currY++;
+        
+        let reachLeft = false;
+        let reachRight = false;
+        
+        while (currY < canvas.height && matchStartColor(pixelPos)) {
+          colorPixel(pixelPos);
+          
+          if (x > 0) {
+            if (matchStartColor(pixelPos - 4)) {
+              if (!reachLeft) { stack.push([x - 1, currY]); reachLeft = true; }
+            } else if (reachLeft) { reachLeft = false; }
+          }
+          
+          if (x < canvas.width - 1) {
+            if (matchStartColor(pixelPos + 4)) {
+              if (!reachRight) { stack.push([x + 1, currY]); reachRight = true; }
+            } else if (reachRight) { reachRight = false; }
+          }
+          
+          currY++;
+          pixelPos += canvas.width * 4;
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    function startAction(e) {
       const pos = getCoords(e);
+      hasDrawn = true;
+
+      if (currentTool === 'fill') {
+        floodFill(pos.x, pos.y, currentColor);
+        return;
+      }
+
+      isDrawing = true;
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
     }
 
     function draw(e) {
-      if (!isDrawing) return;
+      if (!isDrawing || currentTool !== 'brush') return;
       e.preventDefault(); 
       const pos = getCoords(e);
       ctx.lineTo(pos.x, pos.y);
@@ -1133,21 +1263,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Mouse events
-    canvas.addEventListener('mousedown', startDrawing);
+    // Events
+    canvas.addEventListener('mousedown', startAction);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseleave', stopDrawing);
 
-    // Touch events for mobile/tablets
-    canvas.addEventListener('touchstart', (e) => { startDrawing(e); e.preventDefault(); });
-    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchstart', (e) => { startAction(e); e.preventDefault(); }, {passive: false});
+    canvas.addEventListener('touchmove', draw, {passive: false});
     canvas.addEventListener('touchend', stopDrawing);
 
-    // Clear canvas button
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         hasDrawn = false;
       });
     }
@@ -1163,34 +1292,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Create off-screen canvas to bake white background
-      const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = canvas.width;
-      exportCanvas.height = canvas.height;
-      const exportCtx = exportCanvas.getContext('2d');
-
-      exportCtx.fillStyle = '#ffffff';
-      exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-      exportCtx.drawImage(canvas, 0, 0);
-
-      const imageData = exportCanvas.toDataURL('image/png');
+      const imageData = canvas.toDataURL('image/png');
       drawStatus.textContent = 'Sending art...';
 
       try {
         const res = await fetch(BACKEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name,
-            message: "",
-            image: imageData
-          })
+          body: JSON.stringify({ name: name, message: "", image: imageData })
         });
 
         if (res.ok) {
           drawStatus.textContent = 'Sent!';
           drawForm.reset();
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
           hasDrawn = false;
         } else {
           drawStatus.textContent = `Error ${res.status}`;
@@ -1528,6 +1644,60 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+// ==========================================
+// AUTO-OPEN WINDOWS FROM URL (Deep Linking)
+// ==========================================
+window.addEventListener('DOMContentLoaded', () => {
+  // This grabs the word after the slash (e.g. "qna" from "/qna") 
+  // or after the hash (e.g. "qna" from "#qna")
+  const path = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase();
+  const hash = window.location.hash.replace('#', '').toLowerCase();
+  const targetName = path || hash; 
+
+  // Map the typed word to your actual window IDs
+  const windowMap = {
+    'qna': 'qna-window',
+    'message': 'message-window',
+    'about': 'about-window',
+    'links': 'links-window',
+    'paint': 'draw-window',
+    'minesweeper': 'minesweeper-window'
+  };
+
+  const targetId = windowMap[targetName];
+
+  if (targetId) {
+    // Find the taskbar button that opens this window
+    const taskbarBtn = document.querySelector(`.taskbar-btn[data-target="${targetId}"]`);
+    
+    if (taskbarBtn) {
+      // Wait a tiny fraction of a second for the page to render, then simulate a click
+      setTimeout(() => {
+        taskbarBtn.click();
+      }, 150);
+    }
+  }
+});
+
+// ==========================================
+// GOOGLE ANALYTICS LINK TRACKER
+// ==========================================
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    // Grab the text inside the link (e.g. "Twitter") or the URL itself
+    const linkName = link.innerText.trim() || link.href;
+    
+    // Make sure Google Analytics is loaded before sending the event
+    if (typeof gtag === 'function') {
+      gtag('event', 'link_click', {
+        'link_name': linkName,
+        'link_url': link.href
+      });
+    }
+  });
+});
+
 </script>
 </body>
 </html>
