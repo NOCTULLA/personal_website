@@ -428,6 +428,54 @@
       inset 2px 2px 0 #0a0a0a;
   }
 
+  div#msg-body.msg-textarea {
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    cursor: text;
+    outline: none;
+    min-height: 70px;
+  }
+  
+  /* Make sure bold and italic tags render correctly inside it */
+  div#msg-body.msg-textarea b, 
+  div#msg-body.msg-textarea strong { font-weight: bold; }
+  div#msg-body.msg-textarea i, 
+  div#msg-body.msg-textarea em { font-style: italic; }
+  div#msg-body.msg-textarea u { text-decoration: underline; }
+
+  .msg-toolbar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .fmt-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Times New Roman', serif;
+    font-size: 0.85rem;
+    color: #000;
+    background: #C0C0C0;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .fmt-btn:active {
+    border-top: 1px solid #000000;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    background: #dfdfdf;
+  }
+
   .msg-textarea {
     resize: vertical;
     min-height: 70px;
@@ -888,7 +936,6 @@
   <div class="window-titlebar" data-drag-handle>
     <span class="title">NOCTULLA Mail</span>
     <div class="titlebar-buttons">
-
       <button aria-label="Close window">✕</button>
     </div>
   </div>
@@ -898,11 +945,18 @@
       <input class="msg-input" type="text" id="msg-name" maxlength="60" required>
 
       <label class="msg-field" for="msg-body">Message</label>
-      <textarea class="msg-textarea" id="msg-body" maxlength="1000" required></textarea>
+      
+      <!-- ADD THE TOOLBAR HERE -->
+      <div class="msg-toolbar">
+        <button type="button" class="fmt-btn" data-fmt="bold" title="Bold"><b>B</b></button>
+        <button type="button" class="fmt-btn" data-fmt="italic" title="Italic"><i>I</i></button>
+        <button type="button" class="fmt-btn" data-fmt="underline" title="Underline"><u>U</u></button>
+      </div>
+
+      <div class="msg-textarea" id="msg-body" contenteditable="true" role="textbox"></div>
 
       <button class="msg-send" type="submit">Send</button>
       <div class="msg-status" id="msg-status"></div>
-
     </form>
   </div>
 </div>
@@ -1043,36 +1097,93 @@ const BACKEND_URL = 'https://website-backend.noctulla.workers.dev';
 document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================
-  // 1. TEXT MESSAGE WINDOW
+  // 1. TEXT MESSAGE WINDOW & FORMATTING
   // ==========================================
   const msgForm = document.getElementById('message-form');
   const msgStatus = document.getElementById('msg-status');
+  const msgBody = document.getElementById('msg-body');
+  const fmtBtns = document.querySelectorAll('.fmt-btn');
 
+  // --- A. Toolbar Formatting Logic ---
+  if (msgBody && fmtBtns.length > 0) {
+    fmtBtns.forEach(btn => {
+      // We must prevent default on mousedown, otherwise clicking the 
+      // button steals focus away from the text editor!
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault(); 
+      });
+
+      btn.addEventListener('click', () => {
+        const fmt = btn.getAttribute('data-fmt');
+        // execCommand applies real HTML formatting to the highlighted text
+        document.execCommand(fmt, false, null);
+      });
+    });
+  }
+
+  // --- B. HTML to Discord Markdown Converter ---
+  function convertToMarkdown(htmlString) {
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
+
+    function processNode(node) {
+      let out = '';
+      for (let child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          out += child.textContent;
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          let inner = processNode(child);
+          const tag = child.tagName.toLowerCase();
+          
+          if (tag === 'b' || tag === 'strong') out += `**${inner}**`;
+          else if (tag === 'i' || tag === 'em') out += `*${inner}*`;
+          else if (tag === 'u') out += `__${inner}__`;
+          else if (tag === 'br') out += '\n';
+          else if (tag === 'div' || tag === 'p') out += `\n${inner}`;
+          else out += inner;
+        }
+      }
+      return out;
+    }
+    return processNode(tempDiv).trim();
+  }
+
+  // --- C. Crash-Proof Submit Logic ---
   if (msgForm) {
     msgForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById('msg-name').value.trim();
-      const body = document.getElementById('msg-body').value.trim();
-
-      if (!name || !body) return;
-      msgStatus.textContent = 'Sending...';
-
+      e.preventDefault(); // STOP the browser from reloading the page immediately!
+      
       try {
+        const name = document.getElementById('msg-name').value.trim();
+        
+        // Grab the raw HTML from our new editor and convert it to Markdown
+        const rawHTML = msgBody.innerHTML;
+        const bodyMarkdown = convertToMarkdown(rawHTML);
+
+        // Manual validation since standard "required" doesn't work on divs
+        if (!name || !bodyMarkdown) {
+          msgStatus.textContent = 'Please fill out both fields.';
+          return;
+        }
+        
+        msgStatus.textContent = 'Sending...';
+
         const res = await fetch(BACKEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name, message: body })
+          body: JSON.stringify({ name: name, message: bodyMarkdown })
         });
 
         if (res.ok) {
           msgStatus.textContent = 'Sent!';
-          msgForm.reset();
+          msgForm.reset();          // clears the name input
+          msgBody.innerHTML = '';   // clears the message div
         } else {
           msgStatus.textContent = `Error ${res.status}`;
         }
       } catch (err) {
-        msgStatus.textContent = 'Network error.';
+        console.error(err);
+        msgStatus.textContent = 'Network error. See console.';
       }
     });
   }
