@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows 95 — Fatal Exception</title>
+  <link rel="icon" type="image/png" href="NOCTULLA95.png">
+
+  <script>
+    // CLEAN URL AUTO-REDIRECT (e.g. /tos -> /tos.html)
+    const path = window.location.pathname;
+    
+    // List of clean routes to auto-forward
+    const knownPages = ['/tos', '/privacy', '/pp', '/terms'];
+
+    if (knownPages.includes(path.toLowerCase())) {
+      const target = path.toLowerCase() === '/pp' || path.toLowerCase() === '/privacy' ? '/privacy.html' : '/tos.html';
+      window.location.replace(target + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <style>
+    :root {
+      --bsod-blue: #0000aa;
+      --bsod-text: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: var(--bsod-blue);
+      color: var(--bsod-text);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.05rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .bsod-container {
+      max-width: 680px;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .header-tag {
+      background-color: #c0c0c0;
+      color: var(--bsod-blue);
+      display: inline-block;
+      padding: 2px 8px;
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 0 0 1.2rem;
+      line-height: 1.4;
+    }
+
+    .center-text {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .blink {
+        animation: blinker 1s steps(1) infinite;
+    }
+
+    @keyframes blinker {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    }
+
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bsod-container">
+    <div class="header-tag">Windows</div>
+
+    <p>A fatal exception 0E (404_PAGE_NOT_FOUND) has occurred at 0028:C0011E36 in NOCTULLA95. The current application will be terminated.</p>
+
+    <p>* Press any key to return to the desktop.</p>
+    <p>* Press CTRL+ALT+DEL to restart your computer. You will lose any unsaved infromation in all applications.</p>
+
+    <div class="center-text">
+      Press any key to continue <span class="blink">_</span>
+    </div>
+  </div>
+
+  <script>
+    // Redirect back to main desktop on any keypress or screen tap
+    function returnHome() {
+      window.location.href = '/';
+    }
+
+    window.addEventListener('keydown', returnHome);
+    window.addEventListener('click', returnHome);
+    window.addEventListener('touchstart', returnHome);
+  </script>
+
+</body>
+</html>
