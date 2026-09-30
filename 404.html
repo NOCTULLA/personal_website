@@ -11,10 +11,10 @@
     const path = window.location.pathname;
     
     // List of clean routes to auto-forward
-    const knownPages = ['/tos', '/privacy', '/pp', '/terms'];
+    const knownPages = ['/nocturnalbottos', '/nocturnalbotprivacy', '/nocturnalbotpp', '/nocturnalbotterms'];
 
     if (knownPages.includes(path.toLowerCase())) {
-      const target = path.toLowerCase() === '/pp' || path.toLowerCase() === '/privacy' ? '/privacy.html' : '/tos.html';
+      const target = path.toLowerCase() === '/nocturnalbotpp' || path.toLowerCase() === '/nocturnalbotprivacy' ? '/nocturnalbotprivacy.html' : '/nocturnalbottos.html';
       window.location.replace(target + window.location.search + window.location.hash);
     }
   </script>
