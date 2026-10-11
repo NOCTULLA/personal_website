@@ -11,7 +11,7 @@
     const path = window.location.pathname;
     
     // List of clean routes to auto-forward
-    const knownPages = ['/nocturnalbottos', '/nocturnalbotprivacy', '/nocturnalbotpp', '/nocturnalbotterms'];
+    const knownPages = ['/nocturnalbottos', '/nocturnalbotprivacy', '/nocturnalbotpp', '/nocturnalbotterms', 'nocworldtos'];
 
     if (knownPages.includes(path.toLowerCase())) {
       const target = path.toLowerCase() === '/nocturnalbotpp' || path.toLowerCase() === '/nocturnalbotprivacy' ? '/nocturnalbotprivacy.html' : '/nocturnalbottos.html';
